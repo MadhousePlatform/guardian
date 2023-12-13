@@ -62,8 +62,5 @@ pub async fn send_command(server: String, command: &str) -> Result<String, Error
         .send().await?;
 
     let results = result.text().await.unwrap();
-    println!("{}", results);
-
-    //let response = result.text().await.unwrap();
     Ok(results)
 }

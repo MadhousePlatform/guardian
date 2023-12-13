@@ -25,12 +25,7 @@ async fn map_servers() {
         Ok(servers) => {
             for server in servers {
                 let id = &server.identifier;
-                let now = Instant::now();
-                let r = send_list_command(id.parse().unwrap()).await;
-                let elapsed_time = now.elapsed();
-                println!("List took {} milliseconds.", elapsed_time.as_millis());
-                println!("{:?}", r);
-                println!("INFO: {} - {}", id, server.name.as_str())
+                send_list_command(id.parse().unwrap()).await;
             }
         }
         Err(e) => {
@@ -40,9 +35,9 @@ async fn map_servers() {
 }
 
 /*async fn send_tps_request(server: String) {
-    servers::send_command(server, "forge tps").await;
+    servers::send_command(server.parse().unwrap(), "forge tps").await.expect("()");
 }
 */
 async fn send_list_command(server: String) {
-    servers::send_command(server.parse().unwrap(), "list").await.expect("TODO: panic message");
+    servers::send_command(server.parse().unwrap(), "list").await.expect("()");
 }
