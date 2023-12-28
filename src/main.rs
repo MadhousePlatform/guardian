@@ -2,7 +2,7 @@ mod servers;
 
 use log::{info};
 use dotenv::dotenv;
-use tokio::time::{sleep, Duration, Instant};
+use tokio::time::{sleep, Duration};
 
 #[tokio::main]
 async fn main() {
@@ -25,7 +25,10 @@ async fn map_servers() {
         Ok(servers) => {
             for server in servers {
                 let id = &server.identifier;
-                send_list_command(id.parse().unwrap()).await;
+                let response = servers::get_server_state(id).await;
+                if response.unwrap().trim() == "running" {
+                    let r = send_list_command(id).await;
+                }
             }
         }
         Err(e) => {
@@ -38,6 +41,6 @@ async fn map_servers() {
     servers::send_command(server.parse().unwrap(), "forge tps").await.expect("()");
 }
 */
-async fn send_list_command(server: String) {
-    servers::send_command(server.parse().unwrap(), "list").await.expect("()");
+async fn send_list_command(server: &String) {
+    servers::send_command(server, "list").await.expect("()");
 }
